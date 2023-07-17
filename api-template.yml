@@ -1,0 +1,77 @@
+openapi: '3.0.0'
+info:
+  version: '0.0.1'
+  title: '{{api}} API'
+  description: Buy or rent endpoint1s
+
+paths:
+  /endpoint1s/{endpoint1Id}:
+    parameters:
+      - name: endpoint1Id
+        description: The unique identifier of the endpoint1
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/endpoint1Id'
+    get:
+      summary: Read a endpoint1
+      responses:
+        '200':
+          description: The endpoint1 corresponding to the provided `endpoint1Id`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/endpoint1'
+        404:
+          description: No endpoint1 found for the provided `endpoint1Id`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    endpoint1Id:
+      description: The unique identifier of a endpoint1
+      type: string
+    endpoint1:
+      type: object
+      required:
+        - id
+        - name
+        - type
+      properties:
+        id:
+          $ref: '#/components/schemas/endpoint1Id'
+        name:
+          type: string
+        type:
+          type: string
+          enum:
+            - capsule
+            - probe
+            - satellite
+            - spaceplane
+            - station
+        description:
+          type: string
+    Error:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          description: A human readable error message
+          type: string
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      in: header
+      name: X-Api-Key
+security:
+  - ApiKey: []
